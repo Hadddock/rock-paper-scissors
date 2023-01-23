@@ -1,0 +1,39 @@
+#button-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    margin: 25px;
+}
+#button-container > button {
+    width:150px;
+    height:50px;
+    font-size:25px;
+    text-align:center;
+
+
+
+
+}
+
+#scoreboard-container {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+
+}
+
+#round-result {
+    text-align:center;
+    font-size:100px;
+}
+#game-result {
+    text-align:center;
+    font-size:100px;
+}
+#score {
+    text-align:center;
+    font-size:100px;
+}

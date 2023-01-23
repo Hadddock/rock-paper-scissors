@@ -4,43 +4,66 @@ const Winner = {
     Computer: 2
 }
 
-playGame();
+let buttonContainer = document.getElementById("button-container");
 
-function playGame() {
-    let playerScore = 0;
-    let computerScore = 0;
+for (let child of buttonContainer.children) {
+    child.addEventListener("click", e => {
+        playGame(e)
+    });
+}
 
-    for (let i = 0; i < 5; i++) {
-        let playerChoice = getPlayerChoice();
-        let computerChoice = getComputerChoice();
-        let winner = determineRoundWinner(playerChoice, computerChoice);
-        if (winner === Winner.Tie) {
-            console.log(`Tie! You both chose ${playerChoice}`);
-        }
+let roundResult = document.getElementById("round-result");
+let gameResult = document.getElementById("game-result");
 
-        else if (winner === Winner.Player) {
-            playerScore++;
-            console.log(`You win! ${playerChoice} beats ${computerChoice}`);
+let playerScore = 0;
+let computerScore = 0;
+let completed = false;
+
+function playGame(e) {
+
+    if (completed) {
+        resetGame();
+    }
+
+    let playerChoice = e.target.textContent.trim();
+    let computerChoice = getComputerChoice();
+    let winner = determineRoundWinner(playerChoice, computerChoice);
+
+    if (winner === Winner.Tie) {
+        roundResult.textContent = `Tie round! You both chose ${playerChoice}`;
+    }
+
+    else if (winner === Winner.Player) {
+        console.log("point hit");
+        roundResult.textContent = `You win the round! ${playerChoice} beats ${computerChoice}`
+        playerScore++;
+    }
+
+    else {
+        roundResult.textContent = `You lose the round! ${computerChoice} beats ${playerChoice}`;
+        computerScore++;
+    }
+
+    score.textContent = `Player: ${playerScore} Computer: ${computerScore}`;
+
+    if (computerScore === 5 || playerScore === 5) {
+        completed = true;
+        if (playerScore > computerScore) {
+            gameResult.textContent = "You Win The Game!";
         }
 
         else {
-            computerScore++;
-            console.log(`You lose! ${computerChoice} beats ${playerChoice}`);
+            gameResult.textContent = "Computer Wins The Game!";
         }
-        
-        console.log(`Current Score:\n Player: ${playerScore} Computer: ${computerScore}`);
     }
+}
 
-    if (playerScore === computerScore) {
-        console.log("Tie game!");
-    }
-    else if (playerScore > computerScore) {
-        console.log("You win!");
-    }
-    else {
-        console.log("Computer wins!");
-    }
-
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+    completed = false;
+    gameResult.textContent = "";
+    score.textContent = `Player: ${playerScore} Computer: ${computerScore}`;
 }
 
 function determineRoundWinner(playerSelection, computerSelection) {
@@ -51,7 +74,7 @@ function determineRoundWinner(playerSelection, computerSelection) {
     else if ((playerSelection === "Rock" && computerSelection == "Scissors") || (playerSelection === "Scissors" && computerSelection == "Paper") || (playerSelection === "Paper" && computerSelection == "Rock")) {
         return Winner.Player;
     }
-        
+
     else {
         return Winner.Computer;
     }
@@ -59,6 +82,7 @@ function determineRoundWinner(playerSelection, computerSelection) {
 
 function getComputerChoice() {
     let rand = Math.random();
+    console.log(rand);
     if (rand < .33) {
         return "Rock";
     }
@@ -68,17 +92,4 @@ function getComputerChoice() {
     else {
         return "Scissors";
     }
-}
-
-function getPlayerChoice() {
-    let playerChoice = prompt("Enter your choice");
-    playerChoice = playerChoice.toLowerCase().trim();
-    while (playerChoice != "rock" && playerChoice != "paper" && playerChoice != "scissors") {
-        playerChoice = prompt("Invalid choice. Please enter either rock, paper, or scissors");
-        playerChoice = playerChoice.toLowerCase().trim();
-    }
-
-    playerChoice = playerChoice.toLowerCase();
-    playerChoice = playerChoice[0].toUpperCase() + playerChoice.slice(1);
-    return playerChoice;
 }
